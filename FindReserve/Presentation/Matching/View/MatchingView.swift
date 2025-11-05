@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MatchingView: View {
     @State var isPresented: Bool = false
+    @StateObject var router = MatchingRouter()
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -100,9 +101,12 @@ struct MatchingView: View {
             Spacer()
         }
         .padding(.horizontal, 20)
-        .fullScreenCover(isPresented: $isPresented) {
+        .fullScreenCover(isPresented: $isPresented, onDismiss: {
+            router.popToRoot()
+        }, content: {
             DestinationView()
-        }
+        })
+        .environmentObject(router)
     }
 }
 

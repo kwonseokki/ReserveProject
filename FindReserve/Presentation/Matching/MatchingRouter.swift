@@ -16,6 +16,7 @@ enum Route {
 
 class MatchingRouter: ObservableObject {
     @Published var path: [Route] = []
+    @Published var dismissTrigger = false
     
     func push(_ route: Route) {
         path.append(route)
@@ -27,5 +28,6 @@ class MatchingRouter: ObservableObject {
     
     func popToRoot() {
         path.removeAll()
+        dismissTrigger = false
     }
 }

@@ -10,8 +10,9 @@ import MapKit
 
 struct DestinationView: View {
     @StateObject var viewModel = DestinationViewModel()
-    @StateObject var router = MatchingRouter()
-
+    @EnvironmentObject var router: MatchingRouter
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         NavigationStack(path: $router.path) {
             VStack {
@@ -43,8 +44,10 @@ struct DestinationView: View {
                     }
                 }
             }
+            .onChange(of: router.dismissTrigger) { _ in
+                dismiss()
+            }
         }
-        .environmentObject(router)
     }
 }
 
