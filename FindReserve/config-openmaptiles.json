@@ -1,35 +1,73 @@
 {
     "version": 8,
     "name": "Map Test",
-    "center": [126.9780, 37.5665],
-    "zoom": 10,
     "sources": {
         "local-mbtiles": {
             "type": "vector",
-            "url": "mbtiles://osm-2020-02-10-v3.11_south-korea_seoul.mbtiles"
+            "url": "mbtiles://{{LOCAL_FILE_PATH_WITHOUT_PREFIX}}"
         }
     },
     "layers": [
         {
-            "id": "water-landcover-test",
+            "id": "background",
+            "type": "background",
+            "paint": {"background-color": "#F9F9F9"}
+        },
+        {
+            "id": "water",
+            "type": "fill",
+            "source": "local-mbtiles",
+            "source-layer": "water",
+            "paint": {"fill-color": "#AED5E8"}
+        },
+        {
+            "id": "landcover",
             "type": "fill",
             "source": "local-mbtiles",
             "source-layer": "landcover",
-            "filter": ["==", "class", "water"],
+            "paint": {"fill-color": "#AED574"}
+        },
+        {
+            "id": "transportation",
+            "type": "line",
+            "source": "local-mbtiles",
+            "source-layer": "transportation",
             "paint": {
-                "fill-color": "#4A90E2"
+                "line-color": "#edebeb",
+                "line-width": 1.5
             }
         },
         {
-            "id": "boundary-test-line",
-            "type": "line",
+            "id": "landuse",
+            "type": "fill",
             "source": "local-mbtiles",
-            "source-layer": "boundary",
-            "filter": ["==", "admin_level", 2],
+            "source-layer": "landuse",
+            "paint": {"fill-color": "#E9DFC4"}
+        },
+        {
+            "id": "building",
+            "type": "fill",
+            "source": "local-mbtiles",
+            "source-layer": "building",
+            "paint": {"fill-color": "#d1d1d1"}
+        },
+        {
+            "id": "poi-labels",
+            "type": "symbol",
+            "source": "local-mbtiles",
+            "source-layer": "poi",
+            "minzoom": 13,
+            "filter": ["has", "name"],            
+            "layout": {
+                "text-field": ["get", "name"],
+                "text-font": ["Open Sans Regular"],
+                "text-size": 12,
+                "text-allow-overlap": false
+            },
             "paint": {
-                "line-color": "#ff0000",
-                "line-width": 3,
-                "line-dasharray": [1, 1]
+                "text-color": "#333",
+                "text-halo-color": "#fff",
+                "text-halo-width": 1
             }
         }
     ]
