@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import MapKit
 
 struct DestinationView: View {
     @StateObject var viewModel = DestinationViewModel()
@@ -25,8 +24,8 @@ struct DestinationView: View {
                         Text("검색")
                     }
                 }
-                .padding(4)
-                Map(coordinateRegion: $viewModel.region)
+                .padding(4)                
+                MapView()
             }
             .overlay(alignment: .bottom) {
                 CustomButton(text: "설정 완료") {
@@ -40,7 +39,7 @@ struct DestinationView: View {
                     case .reserveGroup:
                         ReserveGroupView(viewModel: ReserveGroupViewModel())
                     case .requestPayment:
-                        RequestPaymentView()                    
+                        RequestPaymentView()
                     }
                 }
             }

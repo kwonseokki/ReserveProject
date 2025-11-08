@@ -1,0 +1,36 @@
+{
+    "version": 8,
+    "name": "Map Test",
+    "center": [126.9780, 37.5665],
+    "zoom": 10,
+    "sources": {
+        "local-mbtiles": {
+            "type": "vector",
+            "url": "mbtiles://osm-2020-02-10-v3.11_south-korea_seoul.mbtiles"
+        }
+    },
+    "layers": [
+        {
+            "id": "water-landcover-test",
+            "type": "fill",
+            "source": "local-mbtiles",
+            "source-layer": "landcover",
+            "filter": ["==", "class", "water"],
+            "paint": {
+                "fill-color": "#4A90E2"
+            }
+        },
+        {
+            "id": "boundary-test-line",
+            "type": "line",
+            "source": "local-mbtiles",
+            "source-layer": "boundary",
+            "filter": ["==", "admin_level", 2],
+            "paint": {
+                "line-color": "#ff0000",
+                "line-width": 3,
+                "line-dasharray": [1, 1]
+            }
+        }
+    ]
+}
