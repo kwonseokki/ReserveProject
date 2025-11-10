@@ -9,36 +9,43 @@ import Combine
 import Foundation
 
 class ReserveGroupViewModel: ObservableObject {
-    let reserves: [Reserve] = [
-        Reserve(name: "예비군1", phone: "010-1234-5678", isPayer: false),
-        Reserve(name: "예비군2", phone: "010-2345-6789", isPayer: true),
-        Reserve(name: "예비군3", phone: "010-3456-7890", isPayer: false)
-    ]
-    private let connectivityManager = ConnectivityManager.shared
+    @Published var reserves: [Reserve] = []
     @Published var sessionCompleted = false
+    @Published var amount = 0
+    
+    private let connectivityManager = ConnectivityManager.shared
+    private var cancellables = Set<AnyCancellable>()
     
     var connectedPeers: Int {
         connectivityManager.connectedPeerCount
     }
     
     init() {
-        observeConnectedPeers()
+        bindData()
     }
     
-    func observeConnectedPeers() {
-        connectivityManager.receivedData = { [weak self] data in
-            print(data, "받음")
-            DispatchQueue.main.async {
-                self?.sessionCompleted = true
+    func bindData() {
+        connectivityManager
+            .connectedUserSubject
+            .sink(receiveValue: { connectedUser in
+                self.reserves = connectedUser.map { Reserve(name: $0.name, phone: $0.phoneNumber, isPayer: false)}
+            })
+            .store(in: &cancellables)
+        
+        connectivityManager
+            .requestPaymentSubject
+            .sink { amount in
+                self.amount = amount
+                self.sessionCompleted = true
             }
-        }
+            .store(in: &cancellables)
     }
     
-    func requestPayment(_ completion: @escaping () -> Void) {
+    func requestPayment() {
         do {
-            let data = try JSONEncoder().encode("testttt")
+            let data = try JSONEncoder().encode(10000)
             try connectivityManager.sendData(data)
-            completion()
+            sessionCompleted = true
         } catch {
             
         }

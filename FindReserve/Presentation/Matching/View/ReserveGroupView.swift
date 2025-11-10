@@ -28,18 +28,16 @@ struct ReserveGroupView: View {
             }
             
             CustomButton(text: "결제 요청") {
-                viewModel.requestPayment {
-                    router.push(.requestPayment)
-                }
+                viewModel.requestPayment()
             }
             .padding(.horizontal, 20)
         }
         .onChange(of: viewModel.sessionCompleted) { sessionCompleted in
             if sessionCompleted {
-                router.push(.requestPayment)
+                router.push(.requestPayment(amount: viewModel.amount))
             }
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden(true)       
     }
 }
 

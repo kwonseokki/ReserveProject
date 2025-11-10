@@ -9,10 +9,10 @@ import SwiftUI
 import Combine
 import MapKit
 
-enum Route {
+enum Route: Hashable {
     case mathcing
     case reserveGroup
-    case requestPayment
+    case requestPayment(amount: Int)
 }
 
 class MatchingRouter: ObservableObject {

@@ -43,7 +43,7 @@ struct DestinationView: View {
                     FindReserveView()
                 case .reserveGroup:
                     ReserveGroupView(viewModel: ReserveGroupViewModel())
-                case .requestPayment:
+                case .requestPayment(let amount):
                     RequestPaymentView()
                 }
             }

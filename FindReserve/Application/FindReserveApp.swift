@@ -12,7 +12,7 @@ import SwiftData
 struct FindReserveApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()                
+            RootView()
         }
     }
 }
