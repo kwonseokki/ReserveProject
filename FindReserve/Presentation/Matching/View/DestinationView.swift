@@ -16,12 +16,15 @@ struct DestinationView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             ZStack(alignment: .bottom) {
-                MapView(currentLocation: $viewModel.currentLocation)                    
-                    .overlay {
-                        if viewModel.isShowSearchBar {
-                            searchResult
+                VStack {
+                    MapView(currentLocation: viewModel.currentLocation)
+                        .equatable()
+                        .overlay {
+                            if viewModel.isShowSearchBar {
+                                searchResult
+                            }
                         }
-                    }
+                }
                 
                 CustomButton(text: "설정 완료") {
                     router.push(.mathcing)

@@ -8,8 +8,14 @@
 import SwiftUI
 import MapLibre
 
-struct MapView: UIViewRepresentable {
-    @Binding var currentLocation: CLLocationCoordinate2D
+struct MapView: UIViewRepresentable, Equatable {
+    var currentLocation: CLLocationCoordinate2D
+    
+    static func == (lhs: MapView, rhs: MapView) -> Bool {
+        let isLatitudeEqual = lhs.currentLocation.latitude == rhs.currentLocation.latitude
+        let isLongitudeEqual = lhs.currentLocation.longitude == rhs.currentLocation.longitude
+        return isLatitudeEqual && isLongitudeEqual
+    }
     
     func makeUIView(context : Context) -> MLNMapView {
         let mapView = MLNMapView(frame: .zero, styleURL: getLocalStyleURL())
