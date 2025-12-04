@@ -21,7 +21,7 @@ struct FindReserveView: View {
                 .fontWeight(.semibold)
             
             if connectivityManager.isConnected {
-                Text("\(connectivityManager.connectedPeerCount)/4 명이 매칭됨")
+                Text("\(connectivityManager.connectedPeerIDs.count)/4 명이 매칭됨")
                     .font(.caption)
             }
             
