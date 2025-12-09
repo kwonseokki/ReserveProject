@@ -23,8 +23,10 @@ class ReserveGroupViewModel: ObservableObject {
     
     /// 호스트 여부
     var isHost: Bool { connectivityManager.isHost ?? false }
+    /// 호스트 유저
+    var hostUser: Reserve? { connectivityManager.hostUser }
     /// 정산 금액
-    var totalAmount: Int { amount / (connectivityManager.connectedDeviceCount + 1) }
+    var totalAmount: Int { amount / connectivityManager.connectedDeviceCount }
     
     init() {
         connectivityManager.$connectedUsers

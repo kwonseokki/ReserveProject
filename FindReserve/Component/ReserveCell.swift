@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ReserveCell: View {
     let reserve: Reserve
+    let hostUser: Reserve?
     
     var body: some View {
         HStack {
@@ -21,14 +22,14 @@ struct ReserveCell: View {
                 HStack {
                     Text(reserve.name)
                         .fontWeight(.semibold)
-//                    if reserve.isPayer {
-//                        Text("결제자")
-//                            .font(.caption)
-//                            .foregroundColor(.white)
-//                            .padding(4)
-//                            .background(Color.green)
-//                            .cornerRadius(6)
-//                    }
+                    if reserve.id == hostUser?.id {
+                        Text("결제자")
+                            .font(.caption)
+                            .foregroundColor(.white)
+                            .padding(4)
+                            .background(Color.green)
+                            .cornerRadius(6)
+                    }
                 }
                 Text(reserve.phone)
                     .font(.caption)

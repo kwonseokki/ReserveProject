@@ -24,7 +24,7 @@ struct ReserveGroupView: View {
                 .padding(.leading, 20)          
             
             List(viewModel.reserves) { reserve in
-                ReserveCell(reserve: reserve)
+                ReserveCell(reserve: reserve, hostUser: viewModel.hostUser)
             }
             
             if viewModel.isHost {
