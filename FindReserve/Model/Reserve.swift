@@ -8,7 +8,8 @@
 import Foundation
 
 struct Reserve: Identifiable, Codable {
-        let id: String
-        let name: String
-        let phone: String
+    let id: String
+    let name: String
+    let phone: String
+    let account: String
 }

@@ -10,7 +10,7 @@ import SwiftUI
 struct ReserveGroupView: View {
     @StateObject var viewModel: ReserveGroupViewModel
     @EnvironmentObject var router: MatchingRouter
-    
+  
     var body: some View {
         VStack(alignment: .leading) {
             Text("OO 훈련장에서 귀가중")
@@ -28,13 +28,27 @@ struct ReserveGroupView: View {
             }
             
             if viewModel.isHost {
-                CustomButton(text: "결제 요청") {
-                    viewModel.requestPayment()
+                CustomButton(text: "정산 하기") {
+                    viewModel.presentPayemntSheet()
                 }
                 .padding(.horizontal, 20)
             }
         }
-        .onChange(of: viewModel.sessionCompleted) { sessionCompleted in
+        .sheet(isPresented: $viewModel.paymentSheetPresented, content: {
+            VStack {
+                Text("\(viewModel.amount) 원")
+                TextField("Enter a number", value: $viewModel.amount, formatter: NumberFormatter())
+                    .keyboardType(.numberPad)
+                
+                CustomButton(text: "결제 요청") {
+                    viewModel.dismissPayementSheet()
+                    viewModel.requestPayment()
+                }
+            }
+            .padding(.horizontal, 16)
+            .presentationDetents([.height(200)])
+        })
+        .onChange(of: viewModel.paymentRequestCompleted) { sessionCompleted in
             if sessionCompleted {
                 router.push(.requestPayment(amount: viewModel.amount))
             }

@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftUI
 
 struct RequestPaymentView: View {
-    @StateObject var viewModel = RequestPaymentViewModel()
+    @StateObject var viewModel: RequestPaymentViewModel
     @EnvironmentObject var router: MatchingRouter
     @State private var isShowCopyAccountToast = false
     
@@ -36,13 +36,15 @@ struct RequestPaymentView: View {
             VStack(spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("결제자: \(viewModel.payerName)")
-                        Text("은행: \(viewModel.bank)")
-                        Text("계좌번호: \(viewModel.account)")
+                        if let payUserInfo = viewModel.payUserInfo {
+                            Text("결제자: \(payUserInfo.name)")
+                            Text("핸드폰 번호: \(payUserInfo.phone)")
+                            Text("계좌번호: \(payUserInfo.account)")
+                        }
                     }
                     Spacer()
                     Button(action: {
-                        UIPasteboard.general.string = viewModel.account
+                        UIPasteboard.general.string = viewModel.payUserInfo?.account
                         isShowCopyAccountToast = true
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                             isShowCopyAccountToast = false

@@ -23,24 +23,25 @@ class ConnectivityManager: NSObject, ObservableObject {
     private let localPeerID = MCPeerID(displayName: UUID().uuidString)
     private let matchServiceType: String = "Match-service"
     
-    
-    var isConnected: Bool {
-        session.connectedPeers.count > 0
-    }
-    
+    /// 매칭 완료 여부
     @Published var connecteComplete: Bool = false
+    /// 연결된 유저 정보
     @Published var connectedUsers: [Reserve] = []
+    /// 연결된 유저 ID
     @Published var connectedPeerIDs: [String] = []
     
-    var localInviterID: String {
-        localPeerID.displayName
-    }
+    /// 다른 디바이스와 연결 여부
+    var isConnected: Bool { session.connectedPeers.count > 0 }
+    /// 랜덤으로 부여되는 기기 고유 ID
+    var localInviterID: String { localPeerID.displayName }
+    /// 호스트 여부
+    var isHost: Bool? { localInviterID == connectedPeerIDs.max() }
+    /// 호스트 유저 정보
+    var hostUser: Reserve? { connectedUsers.first(where: { $0.id == connectedPeerIDs.max() }) }
+    /// 연결된 디바이스 개수
+    var connectedDeviceCount : Int { connectedPeerIDs.count }
     
-    var isHost: Bool? {
-        localInviterID == connectedPeerIDs.max()
-    }
-    
-    let connectedUserSubject = CurrentValueSubject<[User], Never>([])
+    /// 결제 요청
     let requestPaymentSubject = PassthroughSubject<Int, Never>()
     
     override private init() {
@@ -128,7 +129,7 @@ extension ConnectivityManager: MCSessionDelegate {
             }
             
             if let user = KeyChainManager.getUser() {
-                let userInfo = Reserve(id: localInviterID, name: user.name, phone: user.phoneNumber)
+                let userInfo = Reserve(id: localInviterID, name: user.name, phone: user.phoneNumber, account: user.account)
                 if let userData = try? JSONEncoder().encode(userInfo) {
                     try? sendData(userData)
                 }
@@ -139,14 +140,19 @@ extension ConnectivityManager: MCSessionDelegate {
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        // 유저 정보 동기화
         if let user = try? JSONDecoder().decode(Reserve.self, from: data) {
-                 DispatchQueue.main.async { [weak self] in
-                     guard let self = self else { return }
-                     if !connectedUsers.contains(where: { $0.id == user.id }) {
-                         connectedUsers.append(user)
-                     }
-                 }
-             }
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                if !connectedUsers.contains(where: { $0.id == user.id }) {
+                    connectedUsers.append(user)
+                }
+            }
+        }
+        // 정산요청
+        if let amount = try? JSONDecoder().decode(Int.self, from: data) {
+            requestPaymentSubject.send(amount)
+        }
     }
     
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -168,7 +174,6 @@ extension ConnectivityManager: MCNearbyServiceBrowserDelegate {
         print("peerID \(localPeerID)")
         
         browser.invitePeer(peerID, to: session, withContext: nil, timeout: 30)
-        
     }
     
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {

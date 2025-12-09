@@ -8,8 +8,17 @@
 import Combine
 
 class RequestPaymentViewModel: ObservableObject {
-    let amount: Int = 12000
-    let payerName: String = "예비군"
-    let bank: String = "신한은행"
-    let account: String = "123-456-7890"
+    /// 최종 정산 금액
+    private(set) var amount: Int
+    /// 결제자 정보
+    @Published var payUserInfo: Reserve?
+    
+    private let connectivityManager = ConnectivityManager.shared
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init (amount: Int) {
+        self.amount = amount
+        self.payUserInfo = connectivityManager.hostUser
+    }
 }

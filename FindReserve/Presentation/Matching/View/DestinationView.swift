@@ -44,7 +44,7 @@ struct DestinationView: View {
                 case .reserveGroup:
                     ReserveGroupView(viewModel: ReserveGroupViewModel())
                 case .requestPayment(let amount):
-                    RequestPaymentView()
+                    RequestPaymentView(viewModel: RequestPaymentViewModel(amount: amount))
                 }
             }
             .onChange(of: router.dismissTrigger) { _ in
