@@ -10,11 +10,11 @@ import MapKit
 
 struct DestinationView: View {
     @StateObject var viewModel = DestinationViewModel()
-    @EnvironmentObject var router: MatchingRouter
+    @EnvironmentObject var router: Router
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        NavigationStack(path: $router.path) {
+        NavigationStack(path: $router.fullScreenPath) {
             ZStack(alignment: .bottom) {
                 VStack {
                     MapView(currentLocation: viewModel.currentLocation)
@@ -33,10 +33,13 @@ struct DestinationView: View {
                 .animation(nil)
                 .padding()
             }
+            .searchable(text: $viewModel.searchText, isPresented: $viewModel.isShowSearchBar, prompt: "도착지를 검색해 주세요.(서울)")
             .onChange(of: viewModel.searchText) { searchText in
                 viewModel.seachLocation(searchText)
             }
-            .searchable(text: $viewModel.searchText, isPresented: $viewModel.isShowSearchBar, prompt: "도착지를 검색해 주세요.(서울)")
+            .onChange(of: router.dismissTrigger) { _ in
+                dismiss()
+            }
             .navigationDestination(for: Route.self) { destination in
                 switch destination {
                 case .mathcing:
@@ -45,10 +48,9 @@ struct DestinationView: View {
                     ReserveGroupView(viewModel: ReserveGroupViewModel())
                 case .requestPayment(let amount):
                     RequestPaymentView(viewModel: RequestPaymentViewModel(amount: amount))
+                case .training:
+                    TrainingSelectionView()
                 }
-            }
-            .onChange(of: router.dismissTrigger) { _ in
-                dismiss()
             }
         }
     }

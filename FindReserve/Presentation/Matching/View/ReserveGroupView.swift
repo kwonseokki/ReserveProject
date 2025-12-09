@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ReserveGroupView: View {
     @StateObject var viewModel: ReserveGroupViewModel
-    @EnvironmentObject var router: MatchingRouter
+    @EnvironmentObject var router: Router
   
     var body: some View {
         VStack(alignment: .leading) {
