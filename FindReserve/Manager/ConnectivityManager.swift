@@ -21,7 +21,7 @@ class ConnectivityManager: NSObject, ObservableObject {
     private let maxPeerCount: Int = 4
     private let maxConnectedTime: Int = 30
     private let localPeerID = MCPeerID(displayName: UUID().uuidString)
-    private let matchServiceType: String = "Match-service"
+    private let matchServiceType: String = "Match-service"        
     
     /// 매칭 완료 여부
     @Published var connecteComplete: Bool = false

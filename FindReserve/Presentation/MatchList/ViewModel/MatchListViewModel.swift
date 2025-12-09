@@ -6,13 +6,29 @@
 //
 
 import Combine
+import SwiftData
+import Foundation
 
 class MatchListViewModel: ObservableObject {
-    // 더미데이터
-    @Published var payments: [Payment] = [
-        Payment(date: "2025.11.01", from: "용인시 보라동", to: "운학 과학화 훈련장", isPaid: false),
-        Payment(date: "2025.11.02", from: "용인시 보라동", to: "운학 과학화 훈련장", isPaid: true),
-        Payment(date: "2025.11.03", from: "용인시 보라동", to: "운학 과학화 훈련장", isPaid: true)
-    ]
+    private let modelContainer: ModelContainer
+    private let modelContext: ModelContext
     
+    @Published var rideHistory: [RideHistory] = []
+    
+    @MainActor init() {
+        self.modelContainer = try! ModelContainer(
+            for: RideHistory.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
+        )
+        self.modelContext = modelContainer.mainContext
+        self.fetchRideHistory()
+    }
+    
+    func fetchRideHistory() {
+        do {
+           rideHistory = try modelContext.fetch(FetchDescriptor<RideHistory>())
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
 }
