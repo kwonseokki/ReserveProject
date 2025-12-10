@@ -19,37 +19,43 @@ struct MatchingView: View {
                 Text("안녕하세요!")
                     .foregroundStyle(.gray)
                     .padding(.top, 20)
-                Text("\(viewModel.userName) 예비군님")
+                
+                Text("\(viewModel.userInfo?.name ?? "환영합니다") 예비군님")
                     .font(.title)
                     .fontWeight(.bold)
                 
                 // 나의 정보
                 CardContainerView {
                     VStack(spacing: 20) {
-                        HStack {
-                            Label {
-                                Text("나의 정보")
-                                    .fontWeight(.semibold)
-                            } icon: {
-                               Text("🪖")
+                        if let userInfo = viewModel.userInfo {
+                            HStack {
+                                Label {
+                                    Text("나의 정보")
+                                        .fontWeight(.semibold)
+                                } icon: {
+                                   Text("🪖")
+                                }
+                                
+                                Spacer()
                             }
                             
-                            Spacer()
+                            HStack {
+                                Text("핸드폰")
+                                    .foregroundStyle(.gray)
+                                Spacer()
+                                Text(userInfo.phoneNumber)
+                            }
+                            
+                            HStack {
+                                Text("계좌")
+                                    .foregroundStyle(.gray)
+                                Spacer()
+                                Text(userInfo.account)
+                            }
+                        } else {
+                            Text("유저 정보를 등록해주세요")
                         }
-                        
-                        HStack {
-                            Text("핸드폰")
-                                .foregroundStyle(.gray)
-                            Spacer()
-                            Text("010-1234-1234")
-                        }
-                        
-                        HStack {
-                            Text("계좌")
-                                .foregroundStyle(.gray)
-                            Spacer()
-                            Text("3333-12-1234567")
-                        }
+                      
                     }
                 }
                 
