@@ -63,8 +63,8 @@ struct RequestPaymentView: View {
             Spacer()
             
             CustomButton(text: "정산 완료") {
-                viewModel.saveRideHistory()
-                router.dismissTrigger = true                
+                viewModel.completePayment()
+                router.dismissTrigger = true
             }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 50)

@@ -13,7 +13,7 @@ struct ReserveGroupView: View {
   
     var body: some View {
         VStack(alignment: .leading) {
-            Text("OO 훈련장에서 귀가중")
+            Text("\(viewModel.myTrainingInfo?.departure ?? "훈련장") 에서 복귀중")
                 .font(.title)
                 .fontWeight(.bold)
                 .padding(.top, 20)

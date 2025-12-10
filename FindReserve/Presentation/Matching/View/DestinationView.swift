@@ -46,7 +46,7 @@ struct DestinationView: View {
                 case .mathcing:
                     FindReserveView()
                 case .reserveGroup:
-                    ReserveGroupView(viewModel: ReserveGroupViewModel())
+                    ReserveGroupView(viewModel: ReserveGroupViewModel(modelContext: modelContext))
                 case .requestPayment(let amount):
                     RequestPaymentView(viewModel: RequestPaymentViewModel(amount: amount, modelContext: modelContext))
                 case .training:

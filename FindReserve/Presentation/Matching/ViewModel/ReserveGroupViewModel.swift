@@ -7,8 +7,10 @@
 
 import Combine
 import Foundation
+import SwiftData
 
 class ReserveGroupViewModel: ObservableObject {
+    private var modelContext: ModelContext
     /// 연결된 유저 정보
     @Published var reserves: [Reserve] = []
     /// 세션 완료 여부
@@ -17,6 +19,8 @@ class ReserveGroupViewModel: ObservableObject {
     @Published var amount = 0
     /// 정산금액 입력 sheet 표시 여부
     @Published var paymentSheetPresented = false
+    
+    @Published var myTrainingInfo: TrainingInfo?
     
     private let connectivityManager = ConnectivityManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -28,7 +32,24 @@ class ReserveGroupViewModel: ObservableObject {
     /// 정산 금액
     var totalAmount: Int { amount / connectivityManager.connectedDeviceCount }
     
-    init() {
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        dataBind()
+        fetchTrainingInfo()
+    }
+    
+    func fetchTrainingInfo() {
+        do {
+            let trainingList = try modelContext.fetch(FetchDescriptor<TrainingInfo>())
+            if let myTrainingInfo = trainingList.first {
+                self.myTrainingInfo = myTrainingInfo
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func dataBind() {
         connectivityManager.$connectedUsers
             .assign(to: \.reserves, on: self)
             .store(in: &cancellables)

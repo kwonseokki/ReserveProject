@@ -117,14 +117,14 @@ struct MatchingView: View {
                 case .mathcing:
                     FindReserveView()
                 case .reserveGroup:
-                    ReserveGroupView(viewModel: ReserveGroupViewModel())
+                    ReserveGroupView(viewModel: ReserveGroupViewModel(modelContext: modelContext))
                 case .requestPayment(let amount):
                     RequestPaymentView(viewModel: RequestPaymentViewModel(amount: amount, modelContext: modelContext))
                 case .training:
                     TrainingSelectionView(viewModel: TrainingSelectionViewModel(modelContext: modelContext))
                 }
             }
-            .onAppear(perform: {
+            .onAppear(perform: {5
                 viewModel.getUserInfo()
             })
             .padding(.horizontal, 20)

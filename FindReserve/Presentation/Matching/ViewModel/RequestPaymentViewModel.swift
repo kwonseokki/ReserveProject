@@ -9,7 +9,7 @@ import Combine
 import SwiftData
 import Foundation
 
-class RequestPaymentViewModel: ObservableObject {
+final class RequestPaymentViewModel: ObservableObject {
     private var modelContext: ModelContext
     
     /// 최종 정산 금액
@@ -20,14 +20,17 @@ class RequestPaymentViewModel: ObservableObject {
     private let connectivityManager = ConnectivityManager.shared
     
     private var cancellables = Set<AnyCancellable>()
+    /// 결제정보 임시 저장용
+    private var rideHistory: RideHistory?
     
     init (amount: Int, modelContext: ModelContext) {
         self.amount = amount
         self.payUserInfo = connectivityManager.hostUser
         self.modelContext = modelContext
+        saveRideHistory()
     }
     
-    func fetchMyTrainingInfo() -> TrainingInfo? {
+    private func fetchMyTrainingInfo() -> TrainingInfo? {
         do {
             let trainingList = try modelContext.fetch(FetchDescriptor<TrainingInfo>())
             return trainingList.first
@@ -37,21 +40,36 @@ class RequestPaymentViewModel: ObservableObject {
         }
     }
     
+    /// 탑승기록 임시 저장
     func saveRideHistory() {
-        // 이용내역 저장
-        if let myTraningInfo = fetchMyTrainingInfo() {
-            let rideHistory = RideHistory(
+        do {
+            guard let myTraningInfo = fetchMyTrainingInfo() else { return }
+            self.rideHistory = RideHistory(
                 departure: myTraningInfo.departure,
                 destination: myTraningInfo.destination,
-                isPaymentCompleted: true,
+                isPaymentCompleted: false,
                 payUserInfo: payUserInfo
             )
-            modelContext.insert(rideHistory)
-        }
-        do {
+            if let rideHistory {
+                modelContext.insert(rideHistory)
+            }
             try modelContext.save()
         } catch {
             fatalError(error.localizedDescription)
         }
     }
+    
+    /// 결제 완료 처리
+    func completePayment() {
+        do {
+            let myTraningList = try modelContext.fetch(FetchDescriptor<RideHistory>())
+            if let currentTrainingInfo = myTraningList.first(where: { $0.id == rideHistory?.id }) {
+                currentTrainingInfo.isPaymentCompleted = true
+            }
+            try modelContext.save()
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    
 }

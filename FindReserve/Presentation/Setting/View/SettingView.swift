@@ -11,8 +11,7 @@ import SwiftData
 struct SettingView: View {
     @StateObject var viewModel = SettingViewModel()
     
-    var body: some View {
-        NavigationStack {
+    var body: some View {        
             Form {
                 Section(header: Text("내 정보")) {
                     TextField("이름", text: $viewModel.name)
@@ -34,6 +33,5 @@ struct SettingView: View {
             .onAppear {
                 viewModel.getUserInfo()
             }
-        }
     }
 }
