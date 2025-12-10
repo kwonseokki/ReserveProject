@@ -11,7 +11,7 @@ import SwiftUI
 
 struct RequestPaymentView: View {
     @StateObject var viewModel: RequestPaymentViewModel
-    @EnvironmentObject var router: Router
+    @EnvironmentObject var router: FirstTabRouter
     @State private var isShowCopyAccountToast = false
     
     var body: some View {

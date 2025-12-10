@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FindReserveView: View {    
     @StateObject var connectivityManager = ConnectivityManager.shared
-    @EnvironmentObject var router: Router
+    @EnvironmentObject var router: FirstTabRouter
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {

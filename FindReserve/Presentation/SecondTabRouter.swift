@@ -1,31 +1,26 @@
 //
-//  Router.swift
+//  SecondTabRouter.swift
 //  FindReserve
 //
-//  Created by a on 11/6/25.
+//  Created by a on 12/10/25.
 //
 
 import SwiftUI
 import Combine
 import MapKit
 
-enum Route: Hashable, Identifiable {
+enum SecondTabRoute: Hashable, Identifiable {
     var id: Self { self }
-    
-    case mathcing
-    case reserveGroup
-    case requestPayment(amount: Int)
-    case training
     case rideDetail
 }
 
-class Router: ObservableObject {
-    @Published var path: [Route] = []
-    @Published var fullScreenPath: [Route] = []
-    @Published var fullScreenCover: Route?
+class SecondTabRouter: ObservableObject {
+    @Published var path: [SecondTabRoute] = []
+    @Published var fullScreenPath: [SecondTabRoute] = []
+    @Published var fullScreenCover: SecondTabRoute?
     @Published var dismissTrigger = false
     
-    func push(_ route: Route) {
+    func push(_ route: SecondTabRoute) {
         if let fullScreenCover {
             fullScreenPath.append(route)
         } else {
@@ -46,7 +41,7 @@ class Router: ObservableObject {
         fullScreenCover = nil
     }
     
-    func presentFullScreen(_ route: Route) {
+    func presentFullScreen(_ route: SecondTabRoute) {
         fullScreenCover = route
     }
 }

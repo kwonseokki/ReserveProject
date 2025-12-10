@@ -10,7 +10,7 @@ import MapKit
 
 struct DestinationView: View {
     @StateObject var viewModel: DestinationViewModel
-    @EnvironmentObject var router: Router
+    @EnvironmentObject var router: FirstTabRouter
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     
@@ -41,7 +41,7 @@ struct DestinationView: View {
             .onChange(of: router.dismissTrigger) { _ in
                 dismiss()
             }
-            .navigationDestination(for: Route.self) { destination in
+            .navigationDestination(for: FirstTabRoute.self) { destination in
                 switch destination {
                 case .mathcing:
                     FindReserveView()
@@ -51,6 +51,8 @@ struct DestinationView: View {
                     RequestPaymentView(viewModel: RequestPaymentViewModel(amount: amount, modelContext: modelContext))
                 case .training:
                     TrainingSelectionView(viewModel: TrainingSelectionViewModel(modelContext: modelContext))
+                case .rideDetail:
+                    RideDetailView()
                 }
             }
         }

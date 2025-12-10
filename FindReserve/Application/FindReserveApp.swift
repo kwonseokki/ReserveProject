@@ -15,13 +15,15 @@ struct FindReserveApp: App {
         RideHistory.self,
         configurations: ModelConfiguration(isStoredInMemoryOnly: false)
     )
-    @StateObject private var router = Router()
+    @StateObject private var router1 = FirstTabRouter()
+    @StateObject private var router2 = SecondTabRouter()
     
     var body: some Scene {
         WindowGroup {
             RootView()
                 .modelContext(container.mainContext)
-                .environmentObject(router)
+                .environmentObject(router1)
+                .environmentObject(router2)
         }
     }
 }
