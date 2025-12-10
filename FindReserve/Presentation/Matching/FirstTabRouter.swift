@@ -33,7 +33,11 @@ class FirstTabRouter: ObservableObject {
     }
     
     func pop() {
-        path.popLast()
+        if let fullScreenCover {
+            fullScreenPath.popLast()
+        } else {
+            path.popLast()
+        }
     }
     
     func popToRoot() {
