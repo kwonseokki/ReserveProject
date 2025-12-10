@@ -12,31 +12,103 @@ struct ReserveGroupView: View {
     @EnvironmentObject var router: FirstTabRouter
   
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("\(viewModel.myTrainingInfo?.departure ?? "훈련장") 에서 복귀중")
-                .font(.title)
-                .fontWeight(.bold)
-                .padding(.top, 20)
-                .padding(.leading, 20)
-            
-            Text("총 \(viewModel.reserves.count)명 매칭됨")
-                .foregroundColor(.gray)
-                .padding(.leading, 20)          
-            
-            List(viewModel.reserves) { reserve in
-                ReserveCell(reserve: reserve, hostUser: viewModel.hostUser)
-            }
-            
-            if viewModel.isHost {
-                CustomButton(text: "정산 하기") {
-                    viewModel.presentPayemntSheet()
+        VStack(alignment: .leading, spacing: 0) {
+            // 출발지 & 도착지 정보
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    Circle()
+                        .frame(width: 15, height: 15)
+                        .foregroundStyle(.main)
+                    VStack(alignment: .leading) {
+                        Text("출발")
+                            .foregroundStyle(.gray)
+                            .font(.caption)
+                        Text(viewModel.myTrainingInfo?.departure ?? "훈련장")
+                            .font(.subheadline)
+                    }
+                    Spacer()
                 }
-                .padding(.horizontal, 20)
+                VStack {
+                    Rectangle()
+                        .frame(width: 1, height: 25)
+                        .foregroundStyle(.gray)
+                }
+                .frame(width: 15)
+                HStack {
+                    Circle()
+                        .frame(width: 15, height: 15)
+                        .foregroundStyle(.button)
+                    VStack(alignment: .leading) {
+                        Text("도착")
+                            .foregroundStyle(.gray)
+                            .font(.caption)
+                        Text(viewModel.myTrainingInfo?.destination ?? "")
+                            .font(.subheadline)
+                    }
+                    Spacer()
+                }
+            }
+            .background(.white)
+            .padding()
+            
+            // 동승자 리스트
+            ScrollView {
+                VStack(alignment:. leading) {
+                    Label("동승자 (총 \(viewModel.reserves.count)명)", systemImage: "person.2")
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+                    CardContainerView {
+                        VStack {
+                            ForEach(viewModel.reserves, id: \.self.id) { reserve in
+                                ReserveCell(reserve: reserve, hostUser: viewModel.hostUser)
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
+            .padding(.top, 10)
+            .background(.customBackground)
+            
+            // 정산하기
+            if viewModel.isHost {
+                VStack {
+                    HStack {
+                        VStack {
+                            Text("결제 금액")
+                                .font(.caption)
+                                .foregroundStyle(.gray)
+                            Text("\(viewModel.amount) 원")
+                                .font(.title2)
+                                .fontWeight(.bold)                                
+                        }
+                        Spacer()
+                        
+                        Button {
+                            viewModel.presentPayemntSheet()
+                        } label: {
+                            Text("정산하기")
+                                .fontWeight(.bold)
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 14)
+                        }
+                        .background(.button)
+                        .cornerRadius(12)
+                    }
+                    .padding()
+                }
+                .background(.white)
             }
         }
+      
         .sheet(isPresented: $viewModel.paymentSheetPresented, content: {
-            VStack {
+            VStack(alignment: .leading) {
                 Text("\(viewModel.amount) 원")
+                    .font(.title)
+                Text("결제를 요청하기 전 신중하게 금액을 입력해주세요.")
+                    .font(.caption)
+                    .foregroundStyle(.gray)
+                
                 TextField("Enter a number", value: $viewModel.amount, formatter: NumberFormatter())
                     .keyboardType(.numberPad)
                 

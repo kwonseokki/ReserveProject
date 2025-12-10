@@ -13,30 +13,36 @@ struct ReserveCell: View {
     
     var body: some View {
         HStack {
-            Image(systemName: "person.crop.circle.fill")
-                .resizable()
-                .frame(width: 50, height: 50)
-                .foregroundColor(.gray)
+            Circle()
+                .frame(width: 35, height: 35)
+                .foregroundStyle(.main)
+                .overlay(
+                    Text(String(reserve.name.first ?? "예"))
+                        .foregroundStyle(.text)
+                        .fontWeight(.semibold)
+                )
             
             VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(reserve.name)
-                        .fontWeight(.semibold)
-                    if reserve.id == hostUser?.id {
-                        Text("결제자")
-                            .font(.caption)
-                            .foregroundColor(.white)
-                            .padding(4)
-                            .background(Color.green)
-                            .cornerRadius(6)
-                    }
-                }
+                Text(reserve.name)
+                    .font(.system(size: 14, weight: .semibold))
+                    .fontWeight(.semibold)
                 Text(reserve.phone)
                     .font(.caption)
                     .foregroundColor(.gray)
             }
             Spacer()
+            if reserve.id == hostUser?.id {
+                Label(title: {
+                    Text("결제자")
+                }, icon: {
+                    Image(systemName: "checkmark.circle")
+                })
+                    .font(.caption)
+                    .foregroundColor(.black)
+                    .padding(8)
+                    .background(Color.main)
+                    .cornerRadius(8)
+            }
         }
-        .padding(8)
     }
 }
