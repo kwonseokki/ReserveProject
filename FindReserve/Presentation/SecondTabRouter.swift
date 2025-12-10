@@ -11,7 +11,7 @@ import MapKit
 
 enum SecondTabRoute: Hashable, Identifiable {
     var id: Self { self }
-    case rideDetail
+    case rideDetail(id: UUID)
 }
 
 class SecondTabRouter: ObservableObject {

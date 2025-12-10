@@ -50,9 +50,7 @@ struct DestinationView: View {
                 case .requestPayment(let amount):
                     RequestPaymentView(viewModel: RequestPaymentViewModel(amount: amount, modelContext: modelContext))
                 case .training:
-                    TrainingSelectionView(viewModel: TrainingSelectionViewModel(modelContext: modelContext))
-                case .rideDetail:
-                    RideDetailView()
+                    TrainingSelectionView(viewModel: TrainingSelectionViewModel(modelContext: modelContext))                
                 }
             }
         }

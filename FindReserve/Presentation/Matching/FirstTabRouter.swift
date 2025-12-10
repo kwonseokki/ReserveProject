@@ -15,8 +15,7 @@ enum FirstTabRoute: Hashable, Identifiable {
     case mathcing
     case reserveGroup
     case requestPayment(amount: Int)
-    case training
-    case rideDetail
+    case training    
 }
 
 class FirstTabRouter: ObservableObject {

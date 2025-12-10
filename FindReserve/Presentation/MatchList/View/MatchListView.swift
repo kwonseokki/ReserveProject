@@ -10,12 +10,12 @@ import SwiftUI
 struct MatchListView: View {
     @StateObject var viewModel: MatchListViewModel
     @EnvironmentObject var router: SecondTabRouter
-    
+    @Environment(\.modelContext) private var modelContext
     var body: some View {
         NavigationStack(path: $router.path) {
             List(viewModel.rideHistory) { item in
                 Button {
-                    router.push(.rideDetail)
+                    router.push(.rideDetail(id: item.id))
                 } label: {
                     RideHistoryCell(rideHistory: item)
                 }
@@ -25,8 +25,8 @@ struct MatchListView: View {
             }
             .navigationDestination(for: SecondTabRoute.self) { destination in
                 switch destination {
-                case .rideDetail:
-                    RideDetailView()
+                case .rideDetail(let id):
+                    RideDetailView(viewModel: RideDetailViewModel(modelContext: modelContext, id: id))
                 }
             }
         }

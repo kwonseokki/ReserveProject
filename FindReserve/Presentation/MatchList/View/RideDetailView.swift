@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct RideDetailView: View {
+    @StateObject var viewModel: RideDetailViewModel
+    
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            if let rideHistory = viewModel.rideHistory {
+                Text("\(rideHistory.payUserInfo)")
+            }
+            
+            CustomButton(text: "정산 완료") {
+                viewModel.completePayment()
+            }
+        }
     }
 }
 
-#Preview {
-    RideDetailView()
-}
