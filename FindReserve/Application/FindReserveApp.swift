@@ -17,6 +17,7 @@ struct FindReserveApp: App {
     )
     @StateObject private var router1 = FirstTabRouter()
     @StateObject private var router2 = SecondTabRouter()
+    @StateObject private var router3 = ThirdTabRouter()
     
     var body: some Scene {
         WindowGroup {
@@ -24,6 +25,7 @@ struct FindReserveApp: App {
                 .modelContext(container.mainContext)
                 .environmentObject(router1)
                 .environmentObject(router2)
+                .environmentObject(router3)
         }
     }
 }
