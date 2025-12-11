@@ -19,10 +19,18 @@ struct MatchingView: View {
                 Text("안녕하세요!")
                     .foregroundStyle(.gray)
                     .padding(.top, 20)
-                
-                Text("\(viewModel.userInfo?.name ?? "환영합니다") 예비군님")
-                    .font(.title)
-                    .fontWeight(.bold)
+                HStack {
+                    Text("\(viewModel.userInfo?.name ?? "환영합니다") 예비군님")
+                        .font(.title)
+                        .fontWeight(.bold)
+                    Spacer()
+                    Image(.profile)
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundStyle(.main)
+                        .clipShape(Circle())
+                }
                 
                 // 나의 정보
                 CardContainerView {
@@ -97,7 +105,7 @@ struct MatchingView: View {
                                     Text("훈련 일정")
                                         .font(.caption)
                                         .foregroundStyle(.gray)
-                                    Text("\(myTrainingInfo.startDate)")
+                                    Text(myTrainingInfo.startDate.toYYYYMMDD())
                                 }
                             }
                             
@@ -123,7 +131,7 @@ struct MatchingView: View {
                 .padding(.top, 10)
                 
                 Label {
-                    Text("버튼을 누르면 목적지에 맞게 귀가 매칭이 시작됩니다.\n근처의 예비군과 함께 편하게 귀가하세요.")
+                    Text("버튼을 누르면 목적지에 맞게 귀가 매칭이 시작됩니다.")
                         .font(.caption)
                 } icon: {
                     Text("💡")
@@ -134,10 +142,10 @@ struct MatchingView: View {
                 .cornerRadius(12)
                 Spacer()
             }
-            
-            .onAppear(perform: {
+            .onAppear {
+                viewModel.fetchTrainingInfo()
                 viewModel.getUserInfo()
-            })
+            }
             .padding(.horizontal, 20)
             .background(.customBackground)
             .fullScreenCover(item: $router.fullScreenCover) { destination in
@@ -155,9 +163,6 @@ struct MatchingView: View {
                     TrainingSelectionView(viewModel: TrainingSelectionViewModel(modelContext: modelContext))
                 }
             }
-        }
-        .onAppear {
-            viewModel.fetchTrainingInfo()
         }
     }
 }
